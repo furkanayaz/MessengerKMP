@@ -1,0 +1,27 @@
+name: Auto Prefix Issue Title
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  prefix_title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set issue title with prefix
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.payload.issue.number;
+            const current_title = context.payload.issue.title;
+
+            // Eğer zaten TRDEV- ile başlıyorsa dokunma
+            if (!current_title.startsWith("TRDEV-")) {
+              const new_title = `TRDEV-${issue_number}: ${current_title}`;
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                title: new_title
+              });
+            }
