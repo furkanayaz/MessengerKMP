@@ -7,13 +7,15 @@ import org.ayaz.messenger.presentation.plugins.installCors
 import org.ayaz.messenger.presentation.plugins.installKoin
 import org.ayaz.messenger.presentation.plugins.installLogging
 import org.ayaz.messenger.presentation.plugins.installRouting
+import org.ayaz.messenger.presentation.plugins.installStatusPages
 
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
+    //installStatusPages()
+    installKoin()
     installCors()
     installLogging()
     installContentNegotiation()
-    installKoin()
     installRouting()
 }
