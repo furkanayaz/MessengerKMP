@@ -1,22 +1,14 @@
 package org.ayaz.messenger.data.dto_s.auth
 
 import kotlinx.serialization.Serializable
+import org.ayaz.messenger.data.util.validations.PhoneNumberValidation
 import kotlin.random.Random
 
 @Serializable
 data class LoginReqDTO(
     val phoneNumber: String? = null
 ) {
-    fun validate(): Boolean {
-        return when {
-            phoneNumber.isNullOrEmpty() -> false
-            phoneNumber.trim().startsWith("0") && phoneNumber.length == 11 -> true
-            phoneNumber.trim().startsWith("+90") && phoneNumber.length == 13 -> true
-            phoneNumber.trim().length == 10 -> true
-            else -> false
-        }
-    }
-
+    fun validate() = PhoneNumberValidation.validate(phoneNumber)
     fun getGSMCode(): Int = Random.nextBits(6)
 }
 
@@ -30,4 +22,6 @@ data class SignUpReqDTO(
     val name: String? = null,
     val lastName: String? = null,
     val phoneNumber: String? = null,
-)
+) {
+    fun validate() = (name.isNullOrEmpty().not() && name.length >=3) && (lastName.isNullOrEmpty().not() && lastName.length >=3) && PhoneNumberValidation.validate(phoneNumber)
+}

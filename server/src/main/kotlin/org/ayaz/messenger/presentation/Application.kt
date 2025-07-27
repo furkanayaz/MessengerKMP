@@ -2,6 +2,7 @@ package org.ayaz.messenger.presentation
 
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
+import org.ayaz.messenger.presentation.plugins.installAuthentication
 import org.ayaz.messenger.presentation.plugins.installContentNegotiation
 import org.ayaz.messenger.presentation.plugins.installCors
 import org.ayaz.messenger.presentation.plugins.installKoin
@@ -12,10 +13,11 @@ import org.ayaz.messenger.presentation.plugins.installStatusPages
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
-    //installStatusPages()
+    installStatusPages()
     installKoin()
     installCors()
     installLogging()
     installContentNegotiation()
+    installAuthentication()
     installRouting()
 }
