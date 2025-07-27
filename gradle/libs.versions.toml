@@ -16,6 +16,7 @@ junit = "4.13.2"
 kmongo = "4.11.0"
 kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
+kotlinxDatetime = "0.7.1"
 ktor = "3.2.0"
 koin = "4.1.0"
 koin-annotations = "2.1.1-RC1"
@@ -37,11 +38,14 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 call-logging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
 cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koin" }
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koin" }
+ktor-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
 status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
