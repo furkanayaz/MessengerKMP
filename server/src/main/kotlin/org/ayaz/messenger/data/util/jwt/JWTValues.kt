@@ -6,8 +6,9 @@ data class JWTValues(
     val audience: String
 ) {
     companion object {
-        const val SECRET_KEY = "secretKey"
-        const val ISSUER = "issuer"
-        const val AUDIENCE = "audience"
+        private const val BASE_PATH = "ktor.jwt"
+        const val SECRET_KEY = "${BASE_PATH}.secretKey"
+        const val ISSUER = "${BASE_PATH}.issuer"
+        const val AUDIENCE = "${BASE_PATH}.audience"
     }
 }
