@@ -1,7 +1,6 @@
 package org.ayaz.messenger.data.util.jwt
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.JWTCreator
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.jwt.JWTCredential
@@ -24,11 +23,10 @@ class JWTUtil {
             .withClaim(PHONE_NUMBER, phoneNumber)
             .sign(Algorithm.HMAC256(values.secretKey))
 
-    fun verifyToken(values: JWTValues, phoneNumber: String): JWTVerifier =
+    fun verifyToken(values: JWTValues): JWTVerifier =
         JWT.require(Algorithm.HMAC256(values.secretKey))
             .withIssuer(values.issuer)
             .withAudience(values.audience)
-            .withClaim(PHONE_NUMBER, phoneNumber)
             .build()
 
     fun validateToken(credential: JWTCredential): JWTPrincipal? {

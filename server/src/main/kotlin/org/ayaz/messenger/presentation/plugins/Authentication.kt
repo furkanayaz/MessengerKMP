@@ -13,13 +13,11 @@ import org.koin.ktor.ext.inject
 
 fun Application.installAuthentication() {
     val jwtUtil: JWTUtil by inject()
+    val jwtValues = environment.getJWTValues()
 
     install(Authentication) {
         jwt {
-            verifier {
-                val jwtValues = this@installAuthentication.environment.getJWTValues()
-                jwtUtil.verifyToken(jwtValues, "05539759957")
-            }
+            verifier { jwtUtil.verifyToken(jwtValues) }
             validate { jwtUtil.validateToken(it) }
             challenge { _, _ -> call.respond(HttpStatusCode.Unauthorized, Response.Error(errorCode = 401, description = "Token is not valid or has expired.")) }
         }

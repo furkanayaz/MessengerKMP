@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 @Serializable
 data class LoginReqDTO(
-    val phoneNumber: String? = null
+    var phoneNumber: String? = null
 ) {
     fun validate() = PhoneNumberValidation.validate(phoneNumber)
     fun getGSMCode(): Int = Random.nextBits(6)
@@ -21,7 +21,7 @@ data class LoginResDTO(
 data class SignUpReqDTO(
     val name: String? = null,
     val lastName: String? = null,
-    val phoneNumber: String? = null,
+    var phoneNumber: String? = null,
 ) {
     fun validate() = (name.isNullOrEmpty().not() && name.length >=3) && (lastName.isNullOrEmpty().not() && lastName.length >=3) && PhoneNumberValidation.validate(phoneNumber)
 }
