@@ -3,7 +3,9 @@ package org.ayaz.messenger.presentation.routes.auth
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receiveNullable
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import org.ayaz.messenger.data.dto_s.auth.LoginReqDTO
 import org.ayaz.messenger.data.dto_s.auth.LoginResDTO
@@ -16,24 +18,22 @@ import org.ayaz.messenger.presentation.util.CallUtil.getJWTValues
 import org.koin.ktor.ext.inject
 
 fun Route.authRoutes() {
-    authenticate {
-        post(AuthEndpoints.LOGIN) {
-            val reqModel = call.receiveNullable<LoginReqDTO>() ?: throw IllegalArgumentException()
+    post(AuthEndpoints.LOGIN) {
+        val reqModel = call.receiveNullable<LoginReqDTO>() ?: throw IllegalArgumentException()
 
-            if (reqModel.validate()) {
-                val loginUseCase: LoginUseCase by inject()
-                val jwtUtil: JWTUtil by inject()
+        if (reqModel.validate()) {
+            val loginUseCase: LoginUseCase by inject()
+            val jwtUtil: JWTUtil by inject()
 
-                if (loginUseCase(reqModel)) {
-                    call.respond(Response.Success(item = LoginResDTO(
-                        jwtUtil.createToken(call.getJWTValues(), reqModel.phoneNumber!!)
-                    )))
-                } else {
-                    call.respond(Response.Error(errorCode = 400, description = "Your entered phone number is not found."))
-                }
+            if (loginUseCase(reqModel)) {
+                call.respond(Response.Success(item = LoginResDTO(
+                    jwtUtil.createToken(call.application.environment.getJWTValues(), reqModel.phoneNumber!!)
+                )))
             } else {
-                call.respond(Response.Error(errorCode = 400, description = "Your entered field(s) is not null or empty."))
+                call.respond(Response.Error(errorCode = 400, description = "Your entered phone number is not found."))
             }
+        } else {
+            call.respond(Response.Error(errorCode = 400, description = "Your entered field(s) is not null or empty."))
         }
     }
 
@@ -49,6 +49,12 @@ fun Route.authRoutes() {
             }
         } else {
             call.respond(Response.Error(errorCode = 400, description = "Your entered fields cannot valid."))
+        }
+    }
+
+    authenticate {
+        get("/furkan") {
+            call.respondText("yes")
         }
     }
 }
