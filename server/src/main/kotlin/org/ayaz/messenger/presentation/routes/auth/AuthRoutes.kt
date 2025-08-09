@@ -1,7 +1,7 @@
 package org.ayaz.messenger.presentation.routes.auth
 
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.BadRequestException
-import io.ktor.server.request.receiveNullable
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
@@ -13,46 +13,59 @@ import org.ayaz.messenger.data.util.Response
 import org.ayaz.messenger.data.util.validations.PhoneNumberValidation
 import org.ayaz.messenger.domain.use_cases.auth.LoginUseCase
 import org.ayaz.messenger.domain.use_cases.auth.SignUpUseCase
+import org.ayaz.messenger.domain.util.Resource
 import org.ayaz.messenger.presentation.util.CallUtil.getJWTValues
+import org.ayaz.messenger.presentation.util.CallUtil.require
 import org.koin.ktor.ext.inject
 
 fun Route.authRoutes() {
     post(AuthEndpoints.LOGIN) {
-        val reqModel = call.receiveNullable<LoginReqDTO>() ?: throw BadRequestException("")
+        val reqModel = call.require<LoginReqDTO>()
 
-        if (reqModel.validate()) {
-            val loginUseCase: LoginUseCase by inject()
-            val jwtUtil: JWTUtil by inject()
+        with(reqModel.validate()) {
+            onSuccess {
+                val loginUseCase: LoginUseCase by inject()
+                val jwtUtil: JWTUtil by inject()
 
-            reqModel.phoneNumber = PhoneNumberValidation.getNumber(reqModel.phoneNumber)
+                reqModel.phoneNumber = PhoneNumberValidation.getNumber(reqModel.phoneNumber)
 
-            if (loginUseCase(reqModel)) {
-                call.respond(Response.Success(item = LoginResDTO(
-                    jwtUtil.createToken(call.application.environment.getJWTValues(), reqModel.phoneNumber!!)
-                )))
-            } else {
-                throw BadRequestException("")
+                val response = loginUseCase(reqModel)
+
+                when(response) {
+                    is Resource.Error<Boolean> -> call.respond(HttpStatusCode.BadRequest, response.message)
+                    is Resource.Success<Boolean> -> call.respond(
+                        HttpStatusCode.OK, Response.Success(
+                            item = LoginResDTO(
+                                jwtUtil.createToken(
+                                    call.application.environment.getJWTValues(), reqModel.phoneNumber!!
+                                )
+                            )
+                        )
+                    )
+                }
             }
-        } else {
-            throw BadRequestException("")
+
+            onFailure { throw it }
         }
     }
 
     post(AuthEndpoints.SIGN_UP) {
-        val reqModel = call.receiveNullable<SignUpReqDTO>() ?: throw BadRequestException("")
+        val reqModel = call.require<SignUpReqDTO>()
 
-        if (reqModel.validate()) {
-            val signUpUseCase: SignUpUseCase by inject()
+        with(reqModel.validate()) {
+            onSuccess {
+                val signUpUseCase: SignUpUseCase by inject()
 
-            reqModel.phoneNumber = PhoneNumberValidation.getNumber(reqModel.phoneNumber)
+                reqModel.phoneNumber = PhoneNumberValidation.getNumber(reqModel.phoneNumber)
 
-            if (signUpUseCase(reqModel)) {
-                call.respond(Response.Success(item = null))
-            } else {
-                throw BadRequestException("")
+                if (signUpUseCase(reqModel)) {
+                    call.respond(Response.Success(item = null))
+                } else {
+                    throw BadRequestException("")
+                }
             }
-        } else {
-            throw BadRequestException("")
+
+            onFailure { throw it }
         }
     }
 }

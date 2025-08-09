@@ -13,7 +13,7 @@ sealed interface Response {
     @Serializable
     data class Error(
         val isSuccess: Boolean = false,
-        val errorCode: Int,
+        val errorCode: Int = 400,
         val description: String
     ): Response
 }

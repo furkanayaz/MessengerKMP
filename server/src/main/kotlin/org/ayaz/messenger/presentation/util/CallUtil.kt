@@ -1,6 +1,9 @@
 package org.ayaz.messenger.presentation.util
 
 import io.ktor.server.application.ApplicationEnvironment
+import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.request.receiveNullable
+import io.ktor.server.routing.RoutingCall
 import org.ayaz.messenger.data.util.jwt.JWTValues
 
 object CallUtil {
@@ -11,4 +14,6 @@ object CallUtil {
 
         return JWTValues(secretKey, issuer, audience)
     }
+
+    suspend inline fun <reified T> RoutingCall.require(): T = this.receiveNullable<T>() ?: throw BadRequestException("Request body is required.")
 }
