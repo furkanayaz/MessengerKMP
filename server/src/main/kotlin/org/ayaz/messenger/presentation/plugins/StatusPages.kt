@@ -13,8 +13,8 @@ fun Application.installStatusPages() {
     install(StatusPages) {
         exception<Throwable> { call, throwable ->
             when (throwable) {
-                is SerializationException -> call.respond(HttpStatusCode.BadRequest, Response.Error(errorCode = 400, description = "Serialization Exception"))
-                is BadRequestException -> call.respond(HttpStatusCode.BadRequest, Response.Error(errorCode = 400, description = "Your entered field(s) is not null or empty."))
+                is SerializationException -> call.respond(HttpStatusCode.BadRequest, Response.Error(errorCode = 400, description = "Occurred a serialization error."))
+                is BadRequestException -> call.respond(HttpStatusCode.BadRequest, Response.Error(errorCode = 400, description = throwable.message ?: "Your entered field(s) cannot null or empty."))
                 else -> call.respond(HttpStatusCode.InternalServerError, Response.Error(errorCode = 500, description = "Occurred an unknown exception in server."))
             }
         }
