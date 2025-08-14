@@ -1,11 +1,26 @@
 package org.ayaz.messenger.data.di
 
+import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import org.ayaz.messenger.data.db.DBHelper
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
+import org.ayaz.messenger.data.entities.user.UserEntity
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Singleton
+import org.litote.kmongo.KMongo
 
-val dbModule = module {
-    singleOf(::DBHelper)
-    single<MongoDatabase> { get<DBHelper>().getInstance() }
+@Module
+@ComponentScan
+class DBModule {
+    private companion object {
+        const val CONN_URL = "mongodb://localhost:27017"
+        const val DB_NAME = "Messenger"
+
+        const val USERS_COLLECTION = "Users"
+    }
+
+    @Singleton
+    fun provideMongoDB(): MongoDatabase = KMongo.createClient(CONN_URL).getDatabase(DB_NAME)
+
+    @Singleton
+    fun provideUserCollection(mongoDatabase: MongoDatabase): MongoCollection<UserEntity> = mongoDatabase.getCollection(USERS_COLLECTION, UserEntity::class.java)
 }
