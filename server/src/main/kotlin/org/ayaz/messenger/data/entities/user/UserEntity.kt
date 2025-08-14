@@ -1,4 +1,4 @@
-package org.ayaz.messenger.data.db.collections.user
+package org.ayaz.messenger.data.entities.user
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty

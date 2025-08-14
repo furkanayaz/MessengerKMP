@@ -1,16 +1,21 @@
 package org.ayaz.messenger.data.repositories.auth
 
-import com.mongodb.client.MongoDatabase
-import org.ayaz.messenger.data.db.collections.user.UserCollection.getUserCollection
-import org.ayaz.messenger.data.db.collections.user.UserEntity
+import com.mongodb.client.MongoCollection
+import org.ayaz.messenger.data.entities.user.UserEntity
 import org.ayaz.messenger.data.dto_s.auth.SignUpReqDTO
+import org.ayaz.messenger.domain.util.Resource
+import org.koin.core.annotation.Singleton
 
 fun interface ISignUpRepo {
-    fun signUp(req: SignUpReqDTO): Boolean
+    fun signUp(req: SignUpReqDTO): Resource<Boolean>
 }
 
-class SignUpRepo(private val db: MongoDatabase): ISignUpRepo {
-    override fun signUp(req: SignUpReqDTO): Boolean {
-        return db.getUserCollection().insertOne(UserEntity(req.name!!, req.lastName!!, req.phoneNumber!!)).wasAcknowledged()
+@Singleton
+class SignUpRepo(
+    private val collection: MongoCollection<UserEntity>
+): ISignUpRepo {
+    override fun signUp(req: SignUpReqDTO): Resource<Boolean> {
+        val isUserRegistered = collection.insertOne(UserEntity(req.name!!, req.lastName!!, req.phoneNumber!!)).wasAcknowledged()
+        return if (isUserRegistered) Resource.Success(true) else Resource.Error("Occurred an error while creating your account.")
     }
 }

@@ -1,13 +1,8 @@
 package org.ayaz.messenger.domain.di
 
-import org.ayaz.messenger.data.di.dataModule
-import org.ayaz.messenger.domain.use_cases.auth.LoginUseCase
-import org.ayaz.messenger.domain.use_cases.auth.SignUpUseCase
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
 
-val domainModule = module {
-    includes(dataModule)
-    singleOf(::LoginUseCase)
-    singleOf(::SignUpUseCase)
-}
+@Module
+@ComponentScan
+class DomainModule

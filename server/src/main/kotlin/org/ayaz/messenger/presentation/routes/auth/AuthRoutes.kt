@@ -1,7 +1,6 @@
 package org.ayaz.messenger.presentation.routes.auth
 
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
@@ -32,7 +31,7 @@ fun Route.authRoutes() {
                 val response = loginUseCase(reqModel)
 
                 when(response) {
-                    is Resource.Error<Boolean> -> call.respond(HttpStatusCode.BadRequest, response.message)
+                    is Resource.Error<Boolean> -> call.respond(HttpStatusCode.BadRequest, Response.Error(description = response.message))
                     is Resource.Success<Boolean> -> call.respond(
                         HttpStatusCode.OK, Response.Success(
                             item = LoginResDTO(
@@ -58,10 +57,11 @@ fun Route.authRoutes() {
 
                 reqModel.phoneNumber = PhoneNumberValidation.getNumber(reqModel.phoneNumber)
 
-                if (signUpUseCase(reqModel)) {
-                    call.respond(Response.Success(item = null))
-                } else {
-                    throw BadRequestException("")
+                val response = signUpUseCase(reqModel)
+
+                when(response) {
+                    is Resource.Error<Boolean> -> call.respond(HttpStatusCode.BadRequest, Response.Error(description = response.message))
+                    is Resource.Success<Boolean> -> call.respond(HttpStatusCode.OK, Response.Success(item = null))
                 }
             }
 

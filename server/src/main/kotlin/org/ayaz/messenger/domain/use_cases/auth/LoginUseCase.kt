@@ -2,7 +2,9 @@ package org.ayaz.messenger.domain.use_cases.auth
 
 import org.ayaz.messenger.data.dto_s.auth.LoginReqDTO
 import org.ayaz.messenger.data.repositories.auth.LoginRepo
+import org.koin.core.annotation.Singleton
 
+@Singleton
 class LoginUseCase(
     private val loginRepo: LoginRepo
 ) {
