@@ -9,7 +9,7 @@ import org.koin.core.annotation.Singleton
 import org.litote.kmongo.KMongo
 
 @Module
-@ComponentScan
+@ComponentScan("org.ayaz.messenger.data")
 class DBModule {
     private companion object {
         const val CONN_URL = "mongodb://localhost:27017"

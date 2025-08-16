@@ -8,7 +8,7 @@ data class UserEntity(
     val name: String,
     @BsonProperty("last_name")
     val lastName: String,
-    @BsonProperty("phone_number")
-    val phoneNumber: String,
+    val email: String,
+    val password: String,
     @BsonId @BsonProperty("_id") val id: ObjectId = ObjectId()
 )
