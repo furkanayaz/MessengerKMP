@@ -14,6 +14,6 @@ sealed interface Response {
     data class Error(
         val isSuccess: Boolean = false,
         val errorCode: Int = 400,
-        val description: String
+        val errorMessages: List<String>
     ): Response
 }

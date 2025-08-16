@@ -12,17 +12,19 @@ import kotlin.time.ExperimentalTime
 @Singleton
 class JWTUtil {
     private companion object {
-        const val PHONE_NUMBER = "phoneNumber"
+        const val EMAIL = "email"
+        const val PASSWORD = "password"
         const val EXPIRE_MILLIS = 1000 * 60 * 60 * 24
     }
 
     @OptIn(ExperimentalTime::class)
-    fun createToken(values: JWTValues, phoneNumber: String): String =
+    fun createToken(values: JWTValues, email: String, password: String): String =
         JWT.create()
             .withIssuer(values.issuer)
             .withAudience(values.audience)
             .withExpiresAt(Date(System.currentTimeMillis() + EXPIRE_MILLIS))
-            .withClaim(PHONE_NUMBER, phoneNumber)
+            .withClaim(EMAIL, email)
+            .withClaim(PASSWORD, password)
             .sign(Algorithm.HMAC256(values.secretKey))
 
     fun verifyToken(values: JWTValues): JWTVerifier =
@@ -32,7 +34,9 @@ class JWTUtil {
             .build()
 
     fun validateToken(credential: JWTCredential): JWTPrincipal? {
-        return if (credential.payload.getClaim(PHONE_NUMBER).asString().isNullOrEmpty()) {
+        val isEmailNullOrEmpty = credential.payload.getClaim(EMAIL).asString().isNullOrEmpty()
+        val isPasswordNullOrEmpty = credential.payload.getClaim(PASSWORD).asString().isNullOrEmpty()
+        return if (isEmailNullOrEmpty && isPasswordNullOrEmpty) {
             null
         } else {
             JWTPrincipal(credential.payload)

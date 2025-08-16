@@ -15,7 +15,7 @@ class SignUpRepo(
     private val collection: MongoCollection<UserEntity>
 ): ISignUpRepo {
     override fun signUp(req: SignUpReqDTO): Resource<Boolean> {
-        val isUserRegistered = collection.insertOne(UserEntity(req.name!!, req.lastName!!, req.phoneNumber!!)).wasAcknowledged()
-        return if (isUserRegistered) Resource.Success(true) else Resource.Error("Occurred an error while creating your account.")
+        val isUserRegistered = collection.insertOne(UserEntity(req.name, req.lastName, req.email, req.password)).wasAcknowledged()
+        return if (isUserRegistered) Resource.Success(true) else Resource.Error(listOf("Occurred an error while creating your account."))
     }
 }

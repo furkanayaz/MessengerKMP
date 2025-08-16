@@ -6,12 +6,15 @@ android-targetSdk = "35"
 androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.1"
 androidx-constraintlayout = "2.2.1"
-androidx-core = "1.16.0"
-androidx-espresso = "3.6.1"
+androidx-core = "1.17.0"
+androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.1"
-androidx-testExt = "1.2.1"
+androidx-testExt = "1.3.0"
 composeHotReload = "1.0.0-alpha11"
 composeMultiplatform = "1.8.2"
+hibernateValidator = "8.0.0.Final"
+jakartaEl = "4.0.2"
+jakartaValidationApi = "3.0.2"
 junit = "4.13.2"
 kmongo = "4.11.0"
 kotlin = "2.2.0"
@@ -23,6 +26,9 @@ koin-annotations = "2.1.1-RC1"
 logback = "1.5.18"
 
 [libraries]
+hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidator" }
+jakarta-el = { module = "org.glassfish:jakarta.el", version.ref = "jakartaEl" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidationApi" }
 kmongo = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
 kmongo-coroutine = { module = "org.litote.kmongo:kmongo-coroutine", version.ref = "kmongo" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
