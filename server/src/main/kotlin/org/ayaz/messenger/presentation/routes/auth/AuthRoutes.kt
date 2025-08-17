@@ -42,7 +42,7 @@ fun Route.authRoutes() {
 
         when(val response = signUpUseCase(reqModel)) {
             is Resource.Error<Boolean> -> call.respond(HttpStatusCode.BadRequest, Response.Error(errorMessages = response.messages))
-            is Resource.Success<Boolean> -> call.respond(HttpStatusCode.OK, Response.Success(item = null))
+            is Resource.Success<Boolean> -> call.respond(HttpStatusCode.OK, Response.Success(item = null, informationMessage = "Your account is created."))
         }
     }
 }

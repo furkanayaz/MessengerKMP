@@ -7,10 +7,10 @@ import org.ayaz.messenger.presentation.util.validations.annotations.Password
 
 @Serializable
 data class LoginReqDTO(
-    @Email(message = "email")
-    var email: String,
-    @Size(min = 8, max = 20)
-    var password: String
+    @Email
+    val email: String,
+    @field:Password
+    val password: String
 )
 
 @Serializable
@@ -26,7 +26,6 @@ data class SignUpReqDTO(
     val lastName: String,
     @Email
     val email: String,
-    @Size(min = 8, max = 20)
-    @Password
+    @field:Password
     val password: String
 )
