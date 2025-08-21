@@ -11,5 +11,6 @@ data class UserEntity(
     val email: String,
     val salt: String,
     val password: String,
+    val createdDateTime: String,
     @BsonId @BsonProperty("_id") val id: ObjectId = ObjectId()
 )

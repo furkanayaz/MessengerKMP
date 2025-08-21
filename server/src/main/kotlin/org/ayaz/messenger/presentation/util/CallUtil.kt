@@ -1,12 +1,17 @@
 package org.ayaz.messenger.presentation.util
 
+import io.ktor.http.content.PartData
+import io.ktor.http.content.streamProvider
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.request.receiveMultipart
 import io.ktor.server.request.receiveNullable
 import io.ktor.server.routing.RoutingCall
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import org.ayaz.messenger.data.util.jwt.JWTValues
 import org.ayaz.messenger.presentation.util.validations.Validator
 import org.koin.ktor.ext.inject
+import java.io.File
 
 object CallUtil {
     fun ApplicationEnvironment.getJWTValues(): JWTValues {
@@ -28,5 +33,15 @@ object CallUtil {
         validator.validate(body)
 
         return body
+    }
+
+    suspend fun RoutingCall.getSingleFile(): File {
+        val partData = this.receiveMultipart().readPart() ?: throw MessengerExceptions.MissingBodyException()
+        if (partData !is PartData.FileItem) throw MessengerExceptions.MissingBodyException()
+
+        val fileBytes = partData.provider().toInputStream().readBytes()
+        val fileName = partData.originalFileName ?: System.currentTimeMillis().toString()
+
+        return File(fileName).also { it.writeBytes(fileBytes) }
     }
 }

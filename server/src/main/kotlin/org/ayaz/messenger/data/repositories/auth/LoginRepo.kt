@@ -19,10 +19,15 @@ class LoginRepo(
     private val collection: MongoCollection<UserEntity>,
     private val passwordEncryption: PasswordEncryption
 ): ILoginRepo {
+    private companion object {
+        const val EMAIL_ADDRESS_ERROR = "Your entered email address cannot found."
+        const val PASSWORD_ERROR = "Your entered password is wrong."
+    }
+
     override suspend fun login(req: LoginReqDTO): Resource<Boolean> {
-        val userSaltValue = collection.findOne(UserEntity::email eq req.email)?.salt ?: return Resource.Error(listOf("Your entered email address cannot found."))
+        val userSaltValue = collection.findOne(UserEntity::email eq req.email)?.salt ?: return Resource.Error(listOf(EMAIL_ADDRESS_ERROR))
         val encryptedPassword = passwordEncryption.encodeWithSalt(userSaltValue, req.password)
         val canUserLogin = collection.find(Filters.and(UserEntity::email eq req.email, UserEntity::password eq encryptedPassword)).singleOrNull()
-        return if (canUserLogin != null) Resource.Success(true) else Resource.Error(listOf("Your entered password is wrong."))
+        return if (canUserLogin != null) Resource.Success(true) else Resource.Error(listOf(PASSWORD_ERROR))
     }
 }

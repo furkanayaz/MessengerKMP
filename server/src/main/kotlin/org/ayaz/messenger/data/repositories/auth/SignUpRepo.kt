@@ -21,7 +21,7 @@ class SignUpRepo(
         val encryptedPassword = passwordEncryption.encode(req.password)
         val isUserRegistered = try {
             collection.insertOne(UserEntity(req.name, req.lastName, req.email, encryptedPassword.saltValue, encryptedPassword.encodedPassword))
-        } catch (e: MongoWriteException) {
+        } catch (_: MongoWriteException) {
             return Resource.Error(listOf("Please enter an unique email address."))
         }.wasAcknowledged()
 
