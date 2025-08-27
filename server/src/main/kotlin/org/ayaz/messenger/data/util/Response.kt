@@ -7,7 +7,8 @@ sealed interface Response {
     data class Success<T: Any>(
         val isSuccess: Boolean = true,
         val code: Int = 200,
-        val item: T? = null
+        val item: T? = null,
+        val informationMessage: String? = null
     ): Response
 
     @Serializable

@@ -9,6 +9,8 @@ data class UserEntity(
     @BsonProperty("last_name")
     val lastName: String,
     val email: String,
+    val salt: String,
     val password: String,
+    val createdDateTime: String,
     @BsonId @BsonProperty("_id") val id: ObjectId = ObjectId()
 )
